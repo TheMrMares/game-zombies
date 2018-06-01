@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function(){
     //Pre
-    var myCanvas = document.getElementById('myCanvas');
+    myCanvas = document.getElementById('myCanvas');
     ctx = myCanvas.getContext('2d');
     var gameInterval = window.setInterval(game, 1000/15);
     window.addEventListener('keydown', pushKey);
@@ -13,23 +13,39 @@ document.addEventListener('DOMContentLoaded', function(){
 //Inits
 function init(){
     myPlayer = new Player(100,100,20,50);
-    myBackground = new Background(0,0,res[0].width,res[0].height, res[0]);
+    myBackground = new Background(0,0,1000,500, res[0]);
 }
 
 //Game loop
 function game(){
+    //console.log('#X: '+myPlayer.x+' #Y: '+myPlayer.y+' #MW: '+myBackground.w+' #MH: '+myBackground.h);
     //Calculate
-    myBackground.x -= myPlayer.vx*10;
-    myBackground.y -= myPlayer.vy*10;
+    myPlayer.x += myPlayer.vx*10;
+    myPlayer.y += myPlayer.vy*10;
+    if(myPlayer.x < 0){
+        myPlayer.x = 0;
+    }
+    if(myPlayer.x > myBackground.w){
+        myPlayer.x = myBackground.w;
+    }
+    if(myPlayer.y < 0){
+        myPlayer.y = 0;
+    }
+    if(myPlayer.y > myBackground.h - myPlayer.h){
+        myPlayer.y = myBackground.h - myPlayer.h
+    }
+
+    myBackground.x = 0-myPlayer.x + myCanvas.width/2 - myPlayer.w/2;
+    myBackground.y = 0-myPlayer.y + myCanvas.height/2 - myPlayer.h/2;
 
     //Draw
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = 'grey';
     ctx.fillRect(0,0,500,500);
 
     ctx.drawImage(myBackground.res, myBackground.x, myBackground.y);
 
     ctx.fillStyle = 'red';
-    ctx.fillRect(myPlayer.x,myPlayer.y,myPlayer.w,myPlayer.h);
+    ctx.fillRect(myCanvas.width/2 - myPlayer.w/2,myCanvas.height/2 - myPlayer.h/2,myPlayer.w,myPlayer.h);
 }
 
 //Objects
