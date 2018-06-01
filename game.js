@@ -45,15 +45,27 @@ function game(){
     ctx.drawImage(myBackground.res, myBackground.x, myBackground.y);
 
     myBackground.boxes.forEach(function(item, index){
-
-        if((myPlayer.y >= item.y && myPlayer.y <= item.y + item.h) || (myPlayer.y + myPlayer.h>= item.y && myPlayer.y + myPlayer.h <= item.y + item.h)){
+        if((myPlayer.x >= item.x && myPlayer.x <= item.x + item.w) || (myPlayer.x + myPlayer.w >= item.x && myPlayer.x + myPlayer.w <= item.x + item.w) && (myPlayer.oldy + myPlayer.h < item.y || myPlayer.oldy > item.y + item.h)){
+            if(myPlayer.y + myPlayer.h >= item.y && myPlayer.y + myPlayer.h < item.y + item.h){
+                myPlayer.y = item.y - myPlayer.h - 1;
+                myPlayer.vy = 0;
+            }
+            if(myPlayer.y <= item.y + item.h && myPlayer.y > item.y){
+                myPlayer.y = item.y + item.h + 1;
+                myPlayer.vy = 0;
+            }
+        }
+        if((myPlayer.y > item.y && myPlayer.y <= item.y + item.h) || (myPlayer.y + myPlayer.h > item.y && myPlayer.y + myPlayer.h < item.y + item.h) || ((item.y > myPlayer.y && item.y < myPlayer.y + myPlayer.h) || (item.y + item.h >= myPlayer.y && item.y + item.h <= myPlayer.y + myPlayer.h))){
             if(myPlayer.x + myPlayer.w >= item.x && myPlayer.x + myPlayer.w <item.x + item.w){
                 myPlayer.x = item.x - myPlayer.w -1;
+                myPlayer.vx = 0;
             }
             if(myPlayer.x <= item.x + item.w && myPlayer.x > item.x){
                 myPlayer.x = item.x + item.w + 1;
+                myPlayer.vx = 0;
             }
         }
+        
 
         ctx.fillStyle = 'orange';
         ctx.fillRect(myBackground.x + item.x,myBackground.y + item.y,item.w,item.h);
@@ -61,6 +73,7 @@ function game(){
 
     ctx.fillStyle = 'red';
     ctx.fillRect(myCanvas.width/2 - myPlayer.w/2,myCanvas.height/2 - myPlayer.h/2,myPlayer.w,myPlayer.h);
+    myPlayer.oldy = myPlayer.y;
 }
 
 //Objects
@@ -71,7 +84,7 @@ function Background(x,y, w, h, res){
     this.y = y;
     this.res = res
     this.gravity = 0.2;
-    this.boxes = [new Box(300,380,20,50),new Box(400,450,20,50)];
+    this.boxes = [new Box(300,380,20,50),new Box(400,450,20,50),new Box(600,470,20,20)];
 }
 
 function Player(x, y, w, h) {
@@ -81,6 +94,7 @@ function Player(x, y, w, h) {
     this.y = y;
     this.vx = 0;
     this.vy = 0;
+    this.oldy = 0;
 }
 function Box(x,y,w,h){
     this.w = w;
@@ -96,16 +110,16 @@ function pushKey(evt) {
             myPlayer.vy = -3; 
             break;
         case 37:
-            myPlayer.vx = -1; myPlayer.vy = 0; 
+            myPlayer.vx = -1;
             break;
         case 38:
             //myPlayer.vx = 0; myPlayer.vy = -1; 
             break;
         case 39:
-            myPlayer.vx = 1; myPlayer.vy = 0; 
+            myPlayer.vx = 1;
             break;
         case 40:
-            myPlayer.vx = 0; myPlayer.vy = 1; 
+            myPlayer.vy = 1; 
             break;
     }
 }
