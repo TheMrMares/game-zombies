@@ -46,17 +46,12 @@ function game(){
 
     myBackground.boxes.forEach(function(item, index){
 
-        if(
-            (myPlayer.x >= item.x && myPlayer.x <= item.x + item.w) ||
-            (myPlayer.x + myPlayer.w >= item.x && myPlayer.x + myPlayer.w <= item.x + item.w)
-        ) {
-            if(myPlayer.y + myPlayer.h >= item.y && myPlayer.y  + myPlayer.h <= item.y + item.h) {
-                myPlayer.y = item.y - myPlayer.h;
-                myPlayer.vy = 0;
+        if((myPlayer.y >= item.y && myPlayer.y <= item.y + item.h) || (myPlayer.y + myPlayer.h>= item.y && myPlayer.y + myPlayer.h <= item.y + item.h)){
+            if(myPlayer.x + myPlayer.w >= item.x && myPlayer.x + myPlayer.w <item.x + item.w){
+                myPlayer.x = item.x - myPlayer.w -1;
             }
-            if(myPlayer.y <= item.y + item.h && myPlayer.y >= item.y) {
-                myPlayer.y = item.y + item.h;
-                myPlayer.vy = 0;
+            if(myPlayer.x <= item.x + item.w && myPlayer.x > item.x){
+                myPlayer.x = item.x + item.w + 1;
             }
         }
 
@@ -76,7 +71,7 @@ function Background(x,y, w, h, res){
     this.y = y;
     this.res = res
     this.gravity = 0.2;
-    this.boxes = [new Box(100,400,20,50),new Box(200,400,20,50)];
+    this.boxes = [new Box(300,380,20,50),new Box(400,450,20,50)];
 }
 
 function Player(x, y, w, h) {
