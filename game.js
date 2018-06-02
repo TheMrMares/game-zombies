@@ -1,19 +1,20 @@
 document.addEventListener('DOMContentLoaded', function(){
     //Pre
+    loadResources();
+    init();
     myCanvas = document.getElementById('myCanvas');
     ctx = myCanvas.getContext('2d');
     var gameInterval = window.setInterval(game, 1000/60);
     window.addEventListener('keydown', pushKey);
     window.addEventListener('keyup', releaseKey);
-    //Resources
-    loadResources();
-    init();
+    window.addEventListener('mousemove', mouseMove);
 });
 
 //Inits
 function init(){
     myPlayer = new Player(100,100,20,50);
     myBackground = new Background(0,0,1000,500, res[0]);
+    tx = ty = 0;
 }
 
 //Game loop
@@ -71,6 +72,15 @@ function game(){
 
     ctx.fillStyle = 'red';
     ctx.fillRect(myCanvas.width/2 - myPlayer.w/2,myCanvas.height/2 - myPlayer.h/2,myPlayer.w,myPlayer.h);
+
+    ctx.beginPath();
+    ctx.moveTo(tx, ty);
+    ctx.lineTo(myCanvas.width/2 - myPlayer.w/2,myCanvas.height/2 - myPlayer.h/2);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'green';
+    ctx.stroke();
+    ctx.closePath();
+
     myPlayer.saveCoordinates();
     //console.log('#X: '+myPlayer.x1+' #Y: '+myPlayer.y1+ ' #oldX: '+myPlayer.oldx+' #oldY: '+myPlayer.oldy);
 }
@@ -116,35 +126,32 @@ function Box(x,y,w,h){
 //Functions
 function pushKey(evt) {
     switch(evt.keyCode){
-        case 32:
+        case 87:
             myPlayer.vy = -3; 
             break;
-        case 37:
+        case 65:
             myPlayer.vx = -1;
             break;
-        case 38:
-            //myPlayer.vx = 0; myPlayer.vy = -1; 
-            break;
-        case 39:
+        case 68:
             myPlayer.vx = 1;
             break;
-        case 40:
+        case 83:
             myPlayer.vy = 1; 
             break;
     }
 }
 function releaseKey(evt) {
     switch(evt.keyCode){
-        case 37:
-            myPlayer.vx = 0; 
+        case 87:
+            //myPlayer.vy = 0; 
             break;
-        case 38:
-            myPlayer.vy = 0; 
-            break;
-        case 39:
+        case 65:
             myPlayer.vx = 0;
             break;
-        case 40:
+        case 68:
+            myPlayer.vx = 0;
+            break;
+        case 83:
             myPlayer.vy = 0; 
             break;
     }
@@ -153,4 +160,9 @@ function releaseKey(evt) {
 function loadResources(){
     res = [];
     res[0] = document.getElementById('resBackground');
+}
+function mouseMove(evt){
+    var rect = myCanvas.getBoundingClientRect();
+    tx = evt.clientX-rect.left;
+    ty = evt.clientY-rect.top;
 }
