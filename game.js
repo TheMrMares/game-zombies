@@ -8,13 +8,14 @@ document.addEventListener('DOMContentLoaded', function(){
     window.addEventListener('keydown', pushKey);
     window.addEventListener('keyup', releaseKey);
     window.addEventListener('mousemove', mouseMove);
+    window.addEventListener('click', shot);
 });
 
 //Inits
 function init(){
     myPlayer = new Player(100,100,20,50);
     myBackground = new Background(0,0,1000,500, res[0]);
-    tx = ty = 0;
+    mx = my = 0;
 }
 
 //Game loop
@@ -69,58 +70,32 @@ function game(){
         ctx.fillStyle = 'orange';
         ctx.fillRect(myBackground.x + item.x1,myBackground.y + item.y1,item.w,item.h);
     });
+    console.log(myBackground.bullets.length);
+    myBackground.bullets.forEach(function(item,index){
+
+        item.x += item.vx;
+        item.y += item.vy;
+        
+        if(item.x < 0){
+            delete item;
+        }
+
+        ctx.fillStyle = 'yellow';
+        ctx.fillRect(myBackground.x + item.x, myBackground.y + item.y,10,10);
+    });
 
     ctx.fillStyle = 'red';
     ctx.fillRect(myCanvas.width/2 - myPlayer.w/2,myCanvas.height/2 - myPlayer.h/2,myPlayer.w,myPlayer.h);
 
     ctx.beginPath();
-    ctx.moveTo(tx, ty);
-    ctx.lineTo(myCanvas.width/2 - myPlayer.w/2,myCanvas.height/2 - myPlayer.h/2);
+    ctx.moveTo(myCanvas.width/2 - myPlayer.w/2,myCanvas.height/2 - myPlayer.h/2);
+    ctx.lineTo(mx,my);
     ctx.lineWidth = 1;
     ctx.strokeStyle = 'green';
     ctx.stroke();
     ctx.closePath();
 
     myPlayer.saveCoordinates();
-    //console.log('#X: '+myPlayer.x1+' #Y: '+myPlayer.y1+ ' #oldX: '+myPlayer.oldx+' #oldY: '+myPlayer.oldy);
-}
-
-//Objects
-function Background(x,y, w, h, res){
-    this.w = w;
-    this.h = h;
-    this.x = x;
-    this.y = y;
-    this.res = res
-    this.gravity = 0.2;
-    this.boxes = [new Box(200,380,20,50),new Box(400,450,20,50),new Box(600,470,20,20)];
-}
-
-function Player(x, y, w, h) {
-    this.w = w;
-    this.h = h;
-    this.x1 = x;
-    this.y1 = y;
-    this.x2 = x + w;
-    this.y2 = y + h;
-    this.vx = 0;
-    this.vy = 0;
-    this.oldy = 0;
-    this.olx = 0;
-    this.saveCoordinates = function() {
-        this.x2 = this.x1 + this.w;
-        this.y2 = this.y1 + this.h;
-        this.oldy = this.y1;
-        this.oldx = this.x1;
-    }
-}
-function Box(x,y,w,h){
-    this.w = w;
-    this.h = h;
-    this.x1 = x;
-    this.y1 = y;
-    this.x2 = x + w;
-    this.y2 = y + h;
 }
 
 //Functions
@@ -142,9 +117,6 @@ function pushKey(evt) {
 }
 function releaseKey(evt) {
     switch(evt.keyCode){
-        case 87:
-            //myPlayer.vy = 0; 
-            break;
         case 65:
             myPlayer.vx = 0;
             break;
@@ -163,6 +135,9 @@ function loadResources(){
 }
 function mouseMove(evt){
     var rect = myCanvas.getBoundingClientRect();
-    tx = evt.clientX-rect.left;
-    ty = evt.clientY-rect.top;
+    mx = evt.clientX-rect.left;
+    my = evt.clientY-rect.top;
+}
+function shot(){
+    myBackground.bullets.push(new Bullet(myPlayer.x1, myPlayer.y1,mx - myBackground.x, my - myBackground.y));
 }
