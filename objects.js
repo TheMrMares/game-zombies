@@ -21,9 +21,11 @@ function Player(x, y, w, h) {
     this.vy = 0;
     this.oldy = 0;
     this.olx = 0;
-    this.saveCoordinates = function() {
+    this.refreshCoordinates = function() {
         this.x2 = this.x1 + this.w;
         this.y2 = this.y1 + this.h;
+    }
+    this.saveCoordinates = function() {
         this.oldy = this.y1;
         this.oldx = this.x1;
     }

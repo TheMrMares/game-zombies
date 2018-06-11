@@ -20,10 +20,12 @@ function init(){
 
 //Game loop
 function game(){
+    myPlayer.saveCoordinates();
     //Calculate
     myPlayer.vy += myBackground.gravity;
     myPlayer.x1 += myPlayer.vx*5;
     myPlayer.y1 += myPlayer.vy*5;
+    myPlayer.refreshCoordinates();
     if(myPlayer.x1 < 0){
         myPlayer.x1 = 0;
     }
@@ -49,28 +51,26 @@ function game(){
     myBackground.boxes.forEach(function(item, index){
         
         if(Math.abs(myPlayer.x1 - item.x1) <= item.w){
-            if(myPlayer.y2 >= item.y1 && myPlayer.y2 < item.y2 && myPlayer.vy>= 0){
+            if(myPlayer.y2 >= item.y1 && myPlayer.y2 < item.y2){
+                myPlayer.y1 = myPlayer.oldy;
                 myPlayer.vy = 0;
-                myPlayer.y1 = item.y1 - myPlayer.h;
             }
             if(myPlayer.y1 <= item.y2 && myPlayer.y1 > item.y1){
-                myPlayer.y1 = item.y2;
-                myPlayer.vy = 0;
+                myPlayer.y1 = myPlayer.oldy;
             }
         }
         if(Math.abs(myPlayer.y1 - item.y1) <= item.h){
-            if(myPlayer.x2 >= item.x1 && myPlayer.x2 < item.x2 && myPlayer.vx >= 0){
-                myPlayer.x1 = item.x1 - myPlayer.w - 5;
+            if(myPlayer.x2 >= item.x1 && myPlayer.x2 < item.x2){
+                myPlayer.x1 = myPlayer.oldx;
             }
-            if(myPlayer.x1 <= item.x2 && myPlayer.x1 > item.x1 && myPlayer.vx <= 0){
-                myPlayer.x1 = item.x2 + 5;
+            if(myPlayer.x1 <= item.x2 && myPlayer.x1 > item.x1){
+                myPlayer.x1 = myPlayer.oldx;
             }
         }
 
         ctx.fillStyle = 'orange';
         ctx.fillRect(myBackground.x + item.x1,myBackground.y + item.y1,item.w,item.h);
     });
-    console.log(myBackground.bullets.length);
     myBackground.bullets.forEach(function(item,index){
 
         item.x += item.vx;
@@ -94,8 +94,6 @@ function game(){
     ctx.strokeStyle = 'green';
     ctx.stroke();
     ctx.closePath();
-
-    myPlayer.saveCoordinates();
 }
 
 //Functions
