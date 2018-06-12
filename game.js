@@ -50,23 +50,30 @@ function game(){
 
     myBackground.boxes.forEach(function(item, index){
         
-        if(Math.abs(myPlayer.x1 - item.x1) <= item.w){
+        if( ((myPlayer.y1 >= item.y1 && myPlayer.y1 <= item.y2) || (myPlayer.y2 > item.y1 && myPlayer.y2 <= item.y2)) ||
+            ((item.y1 >= myPlayer.y1 && item.y1 < myPlayer.y2) || (item.y2 >= myPlayer.y1 && item.y2 <= myPlayer.y2)) ){
+            if(myPlayer.x2 >= item.x1 && myPlayer.x2 < item.x2){
+                myPlayer.x1 = myPlayer.oldx;
+                console.log('3');
+            }
+            if(myPlayer.x1 <= item.x2 && myPlayer.x1 > item.x1){
+                myPlayer.x1 = myPlayer.oldx;
+                console.log('4');
+            }
+        }
+        if( ((myPlayer.x1 >= item.x1 && myPlayer.x1 <= item.x2) || (myPlayer.x2 >= item.x1 && myPlayer.x2 <= item.x2)) ||
+            ((item.x1 >= myPlayer.x1 && item.x1 <= myPlayer.x2) || (item.x2 >= myPlayer.x1 && item.x2 <= myPlayer.x2)) ){
             if(myPlayer.y2 >= item.y1 && myPlayer.y2 < item.y2){
+                console.log('1');
                 myPlayer.y1 = myPlayer.oldy;
                 myPlayer.vy = 0;
             }
             if(myPlayer.y1 <= item.y2 && myPlayer.y1 > item.y1){
                 myPlayer.y1 = myPlayer.oldy;
+                console.log('2');
             }
         }
-        if(Math.abs(myPlayer.y1 - item.y1) <= item.h){
-            if(myPlayer.x2 >= item.x1 && myPlayer.x2 < item.x2){
-                myPlayer.x1 = myPlayer.oldx;
-            }
-            if(myPlayer.x1 <= item.x2 && myPlayer.x1 > item.x1){
-                myPlayer.x1 = myPlayer.oldx;
-            }
-        }
+        
 
         ctx.fillStyle = 'orange';
         ctx.fillRect(myBackground.x + item.x1,myBackground.y + item.y1,item.w,item.h);
@@ -116,13 +123,19 @@ function pushKey(evt) {
 function releaseKey(evt) {
     switch(evt.keyCode){
         case 65:
-            myPlayer.vx = 0;
+            if(myPlayer.vx < 0){
+                myPlayer.vx += 1;
+            }
             break;
         case 68:
-            myPlayer.vx = 0;
+            if(myPlayer.vx > 0){
+                myPlayer.vx -= 1;
+            }
             break;
         case 83:
-            myPlayer.vy = 0; 
+            if(myPlayer.vy > 0){
+                myPlayer.vy += 1; 
+            }
             break;
     }
 }

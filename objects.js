@@ -39,18 +39,21 @@ function Box(x,y,w,h){
     this.y2 = y + h;
 }
 function Bullet(x,y,tx,ty){
+    
     this.x = x;
     this.y = y;
     this.tx = tx;
     this.ty = ty;
-    if(tx < x){
-        this.vx = -Math.abs(x-tx)/5;
+    var counterN = Math.sqrt( Math.pow(Math.abs(x-tx),2) + Math.pow(Math.abs(y-ty),2) );
+    counterN = counterN/10;
+    if(tx < x){ 
+        this.vx = -(Math.abs(x-tx)/counterN);
     } else {
-        this.vx = Math.abs(x-tx)/5;
+        this.vx = Math.abs(x-tx)/counterN;
     }
     if(ty < y){
-        this.vy = -Math.abs(y-ty)/5;
+        this.vy = -(Math.abs(y-ty)/counterN);
     } else {
-        this.vy = Math.abs(y-ty)/5;
+        this.vy = Math.abs(y-ty)/counterN;
     }
 }
