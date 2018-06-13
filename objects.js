@@ -38,10 +38,13 @@ function Box(x,y,w,h){
     this.x2 = x + w;
     this.y2 = y + h;
 }
-function Bullet(x,y,tx,ty){
-    
-    this.x = x;
-    this.y = y;
+function Bullet(x,y,tx,ty,w,h){
+    this.w = w;
+    this.h = h;
+    this.x1 = x;
+    this.y1 = y;
+    this.x2 = x+w;
+    this.y2 = y+h;
     this.tx = tx;
     this.ty = ty;
     var counterN = Math.sqrt( Math.pow(Math.abs(x-tx),2) + Math.pow(Math.abs(y-ty),2) );
@@ -55,5 +58,9 @@ function Bullet(x,y,tx,ty){
         this.vy = -(Math.abs(y-ty)/counterN);
     } else {
         this.vy = Math.abs(y-ty)/counterN;
+    }
+    this.refreshCoordinates = function() {
+        this.x2 = this.x1 + this.w;
+        this.y2 = this.y1 + this.h;
     }
 }
