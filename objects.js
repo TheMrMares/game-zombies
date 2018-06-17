@@ -6,11 +6,10 @@ function Background(x,y, w, h, res){
     this.y = y;
     this.res = res
     this.gravity = 0.2;
-    this.boxes = [new Box(200,380,20,50),new Box(400,450,20,50),new Box(600,470,20,20),new Box(700,470,200,20)];
+    this.boxes = [new Box(200,280,20,50),new Box(400,250,20,50),new Box(600,270,20,20),new Box(700,270,200,20)];
     this.bullets = [];
 }
-
-function Player(x, y, w, h) {
+function Player(x, y, w, h, spriteWalk) {
     this.w = w;
     this.h = h;
     this.x1 = x;
@@ -20,7 +19,8 @@ function Player(x, y, w, h) {
     this.vx = 0;
     this.vy = 0;
     this.oldy = 0;
-    this.olx = 0;
+    this.oldx = 0;
+    this.spriteWalk = spriteWalk;
     this.refreshCoordinates = function() {
         this.x2 = this.x1 + this.w;
         this.y2 = this.y1 + this.h;
@@ -63,4 +63,12 @@ function Bullet(x,y,tx,ty,w,h){
         this.x2 = this.x1 + this.w;
         this.y2 = this.y1 + this.h;
     }
+}
+function Sprite(sw,sh,iw,ih,img){
+    this.sw = sw;
+    this.sh = sh;
+    this.iw = iw;
+    this.ih = ih;
+    this.actual = 0;
+    this.img = img;
 }

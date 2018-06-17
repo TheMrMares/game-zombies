@@ -13,11 +13,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
 //Inits
 function init(){
-    myPlayer = new Player(100,100,20,50);
+    myPlayer = new Player(100,100,20,50,new Sprite(480,50,40,50,res[1]));
     myBackground = new Background(0,0,1000,500, res[0]);
     mx = my = 0;
     frameCounter = 0;
-    spriteX = 0;
 }
 
 //Game loop
@@ -32,8 +31,8 @@ function game(){
     if(myPlayer.x1 < 0){
         myPlayer.x1 = 0;
     }
-    if(myPlayer.x1 > myBackground.w){
-        myPlayer.x1 = myBackground.w;
+    if(myPlayer.x2 > myBackground.w){
+        myPlayer.x1 = myBackground.w - myPlayer.w;
     }
     if(myPlayer.y1 < 0){
         myPlayer.y1 = 0;
@@ -47,9 +46,10 @@ function game(){
 
     //Draw
     ctx.fillStyle = 'grey';
-    ctx.fillRect(0,0,500,500);
+    ctx.fillRect(0,0,800,800);
 
-    ctx.drawImage(myBackground.res, myBackground.x, myBackground.y);
+    ctx.fillStyle = 'dodgerblue';
+    ctx.fillRect(myBackground.x, myBackground.y,myBackground.w, myBackground.h);
 
     myBackground.boxes.forEach(function(item, index){
         
@@ -101,30 +101,32 @@ function game(){
         });
 
         ctx.fillStyle = 'yellow';
+        ctx.shadowColor = 'yellow';
+        ctx.shadowBlur = 10;
         ctx.fillRect(myBackground.x + item.x1, myBackground.y + item.y1,item.w, item.h);
+        ctx.shadowBlur = 0;
     });
     
     ctx.fillStyle = 'red';
-    //ctx.fillRect(myCanvas.width/2 - myPlayer.w/2,myCanvas.height/2 - myPlayer.h/2,myPlayer.w,myPlayer.h);
-    if(frameCounter%10 == 0 && myPlayer.vx != 0){
-        spriteX += 20;
-        if(spriteX == 200){
-            spriteX=0;
+    if(frameCounter%2 == 0 && myPlayer.vx != 0){
+        myPlayer.spriteWalk.actual += 40;
+        if(myPlayer.spriteWalk.actual == myPlayer.spriteWalk.sw){
+            myPlayer.spriteWalk.actual=0;
         }
     }
     if(myPlayer.vx == 0){
-        spriteX = 0;
+        myPlayer.spriteWalk.actual = 0;
     }
-    ctx.drawImage(res[1],spriteX,0,20,50,myCanvas.width/2 - myPlayer.w/2,myCanvas.height/2 - myPlayer.h/2,myPlayer.w,myPlayer.h);
+    ctx.drawImage(myPlayer.spriteWalk.img,myPlayer.spriteWalk.actual,0,myPlayer.spriteWalk.iw,myPlayer.spriteWalk.ih,myCanvas.width/2 - myPlayer.w/2,myCanvas.height/2 - myPlayer.h/2,myPlayer.w,myPlayer.h);
 
     ctx.beginPath();
-    ctx.moveTo(myCanvas.width/2 - myPlayer.w/2,myCanvas.height/2 - myPlayer.h/2);
+    ctx.moveTo(myCanvas.width/2, myCanvas.height/2 - myPlayer.h/2+5);
     ctx.lineTo(mx,my);
     ctx.lineWidth = 1;
-    ctx.strokeStyle = 'green';
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.setLineDash([10, 10]);
     ctx.stroke();
     ctx.closePath();
-    console.log(frameCounter);
     if(frameCounter==60){
         frameCounter = 0;
     }
@@ -178,7 +180,7 @@ function mouseMove(evt){
     my = evt.clientY-rect.top;
 }
 function shot(){
-    myBackground.bullets.push(new Bullet(myPlayer.x1, myPlayer.y1,mx - myBackground.x, my - myBackground.y, 10, 10));
+    myBackground.bullets.push(new Bullet(myPlayer.x1, myPlayer.y1,mx - myBackground.x, my - myBackground.y, 3, 3));
 }
 
 function isCollission(obj, box){
