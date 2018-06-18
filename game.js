@@ -18,6 +18,7 @@ function init(){
     mx = my = 0;
     frameCounter = 0;
     myBackground.zombies.push(new Zombie(myBackground.w, myBackground.h - 50, 20, 50, 40, 40, new Sprite(480,50,40,50,res[2])));
+    killedZombies = 0;
 }
 
 //Game loop
@@ -48,7 +49,7 @@ function game(){
 
     //Draw
     ctx.fillStyle = 'grey';
-    ctx.fillRect(0,0,800,800);
+    ctx.fillRect(0,0,myCanvas.width,myCanvas.height);
 
     ctx.fillStyle = 'dodgerblue';
     ctx.fillRect(myBackground.x, myBackground.y,myBackground.w, myBackground.h);
@@ -84,6 +85,7 @@ function game(){
     });
     myBackground.bullets.forEach(function(item,index){
         item.x1 += item.vx;
+        item.vy += 0.2*myBackground.gravity;
         item.y1 += item.vy;
         item.refreshCoordinates();
         if(item.x1 < 0){
@@ -121,12 +123,12 @@ function game(){
 
         if(item.x2 < 0 || item.hp <= 0){
             myBackground.zombies.splice(myBackground.zombies.indexOf(item),1);
+            killedZombies++;
             if(item.hp > 0){
                 myBackground.lifes--;
             }
         }
         if(isCollission(item, myPlayer) == true){
-            console.log('xd');
             myPlayer.hp -= 1;
         }
 
@@ -150,6 +152,7 @@ function game(){
         myPlayer.x1 = 100;
         myPlayer.y1 = 100;
         myBackground.lifes = 5;
+        killedZombies = 0;
     }
     if(myBackground.zombies.length == 0){
         var realLength = myBackground.zombies.length;
@@ -190,11 +193,12 @@ function game(){
     ctx.closePath();
 
     ctx.fillStyle = 'red';
-    ctx.font = "16px Arial";
-    ctx.fillText("Twoje życia",20,20); 
+    ctx.font = '16px Arial';
+    ctx.fillText('Twoje życia',20,20); 
     for(var i = 0; i<myBackground.lifes;i++){
         ctx.fillRect(20+20*i,30,10,10);
     }
+    ctx.fillText('Zabite zombie: '+killedZombies,myCanvas.width - 150,20); 
 
     if(frameCounter==60){
         frameCounter = 0;
