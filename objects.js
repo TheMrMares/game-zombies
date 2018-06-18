@@ -1,15 +1,20 @@
 //Objects
-function Background(x,y, w, h, res){
+function Background(x,y, w, h, res, lifes){
     this.w = w;
     this.h = h;
     this.x = x;
     this.y = y;
     this.res = res
+    this.lifes = lifes;
     this.gravity = 0.2;
     this.boxes = [new Box(200,280,20,50),new Box(400,250,20,50),new Box(600,270,20,20),new Box(700,270,200,20)];
+    this.zombies = [];
     this.bullets = [];
 }
-function Player(x, y, w, h, spriteWalk) {
+function Player(x, y, w, h, spriteWalk, dmg, hp, maxhp) {
+    this.dmg = dmg;
+    this.hp = hp;
+    this.maxhp = maxhp;
     this.w = w;
     this.h = h;
     this.x1 = x;
@@ -28,6 +33,23 @@ function Player(x, y, w, h, spriteWalk) {
     this.saveCoordinates = function() {
         this.oldy = this.y1;
         this.oldx = this.x1;
+    }
+}
+function Zombie(x, y, w, h, hp, maxhp, spriteWalk){
+    this.hp = hp;
+    this.maxhp = maxhp;
+    this.w = w;
+    this.h = h;
+    this.x1 = x;
+    this.y1 = y;
+    this.x2 = x + w;
+    this.y2 = y + h;
+    this.vx = -1;
+    this.vy = 0;
+    this.spriteWalk = spriteWalk;
+    this.refreshCoordinates = function() {
+        this.x2 = this.x1 + this.w;
+        this.y2 = this.y1 + this.h;
     }
 }
 function Box(x,y,w,h){
